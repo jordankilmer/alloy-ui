@@ -373,6 +373,11 @@ var TreeNode = A.Component.create({
 
             boundingBox.setData('tree-node', instance);
 
+            boundingBox.setAttribute('tabIndex', 0);
+
+            instance._setAriaElements();
+            instance._bindKeypress();
+
             // Sync the Widget TreeNode id with the BOUNDING_BOX id
             instance._syncTreeNodeBBId();
 
@@ -520,6 +525,49 @@ var TreeNode = A.Component.create({
             var instance = this;
 
             instance._syncIconUI();
+        },
+
+        /**
+        * 
+        * @method _bindKeyPress
+        *
+        *
+        *
+        */
+        _bindKeypress: function() {
+            var instance = this,
+                boundingBox = instance.get('boundingBox');
+
+            instance._keyHandler = boundingBox.on('keydown', A.bind(instance._handleKeypressEvent, instance));
+        },
+
+        /**
+        *
+        * @method _handleKeyPressEvent
+        *
+        *
+        *
+        */
+        _handleKeypressEvent: function(event) {
+            var instance = this,
+                keyCode = event.keyCode,
+                targetNode = event.target,
+                next = targetNode.next(),
+                previous = targetNode.previous();
+
+            if (targetNode.hasClass('tree-node')) {
+                if (keyCode === 38) {
+                    event.preventDefault();
+                    previous.focus();
+                }
+                else if (keyCode === 40) {
+                    event.preventDefault();
+                    next.focus();
+                }
+                else if (keyCode === 13) {
+                    instance.toggle();
+                }
+            }
         },
 
         /**

@@ -100,10 +100,10 @@ YUI({
         basePath: '/demos/surface',
         on: {
             startNavigate: function(event) {
-                Y.log(event);
+                console.log(event);
             },
             endNavigate: function(event) {
-                Y.log(event);
+                console.log(event);
             }
         }
     });

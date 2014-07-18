@@ -1,6 +1,5 @@
 .form-builder .property-builder-drop-container, .form-builder .tab-pane {
     height: auto;
-    min-height: 150px;
     overflow: auto;
     padding-bottom: 10px;
 }

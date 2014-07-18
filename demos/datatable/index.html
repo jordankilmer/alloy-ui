@@ -30,10 +30,10 @@
                     editor: new Y.TextAreaCellEditor({
                         on: {
                             save: function(event) {
-                                Y.log('save', event.newVal);
+                                console.log('save', event.newVal);
                             },
                             cancel: function(event) {
-                                Y.log('cancel', event);
+                                console.log('cancel', event);
                             }
                         },
                         validator: {

@@ -89,7 +89,7 @@ A.ImageViewer = A.Base.create(
                     linksChange: this._afterLinksChange,
                     thumbnailsConfigChange: this._afterThumbnailsConfigChange
                 }),
-                this._closeEl.after('click', A.bind(this._afterCloseClicked, this)),
+                this._closeEl.on('click', A.bind(this.hide, this)),
                 A.getDoc().on('keydown', A.bind(this._onKeydown, this)),
                 A.after(this._afterFillHeight, this, 'fillHeight')
             );
@@ -127,16 +127,6 @@ A.ImageViewer = A.Base.create(
          */
         getLink: function(index) {
             return this.get('links').item(index);
-        },
-
-        /**
-         * Fired after the close button is clicked.
-         *
-         * @method _afterCloseClicked
-         * @protected
-         */
-        _afterCloseClicked: function() {
-            this.hide();
         },
 
         /**

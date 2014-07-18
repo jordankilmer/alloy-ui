@@ -46,9 +46,9 @@ var Lang = A.Lang,
     HIT_AREA_TPL = '<span class="' + CSS_TREE_HITAREA + '"></span>',
     ICON_TPL = '<span class="' + CSS_TREE_ICON + '"></span>',
     LABEL_TPL = '<span class="' + CSS_TREE_LABEL + '"></span>',
-    NODE_CONTAINER_TPL = '<ul role="tree"></ul>',
+    NODE_CONTAINER_TPL = '<ul></ul>',
 
-    NODE_BOUNDING_TEMPLATE = '<li class="' + CSS_TREE_NODE + '" role="treeitem"></li>',
+    NODE_BOUNDING_TEMPLATE = '<li class="' + CSS_TREE_NODE + '"></li>',
     NODE_CONTENT_TEMPLATE = '<div class="' + CSS_TREE_NODE_CONTENT + '"></div>';
 
 /**
@@ -321,7 +321,7 @@ var TreeNode = A.Component.create({
          * @default null
          */
         tabIndex: {
-            value: 0
+            value: null
         },
 
         /**
@@ -372,10 +372,6 @@ var TreeNode = A.Component.create({
             var boundingBox = instance.get('boundingBox');
 
             boundingBox.setData('tree-node', instance);
-            boundingBox.setAttribute('tabIndex', instance.get('tabIndex'));
-
-            instance._setAriaElements();
-            instance._bindKeypress();
 
             // Sync the Widget TreeNode id with the BOUNDING_BOX id
             instance._syncTreeNodeBBId();
@@ -527,135 +523,6 @@ var TreeNode = A.Component.create({
         },
 
         /**
-        *
-        * @method _bindKeyPress
-        *
-        *
-        *
-        */
-        _bindKeypress: function() {
-            var instance = this,
-                boundingBox = instance.get('boundingBox');
-
-            instance._keyHandler = boundingBox.on('keydown', A.bind(instance._handleKeypressEvent, instance));
-        },
-
-        /**
-        *
-        * @method _handleKeyPressEvent
-        *
-        *
-        *
-        */
-        _handleKeypressEvent: function(event) {
-            var instance = this,
-                targetNode = event.target;
-
-            if (targetNode.hasClass('tree-node')) {
-                var ancestor = targetNode.ancestor('.tree-node'),
-                    keyCode = event.keyCode,
-                    nextNode = targetNode.next(),
-                    previous = targetNode.previous();
-
-                // Up arrow key moves up
-                if (keyCode === 38) {
-                    if (previous) {
-                        var expanded = previous.get('expanded'),
-                            prevChild = previous.all('.tree-node').last();
-
-                        if (prevChild) {
-                            var hidden = prevChild.get('parentNode').attr('hidden');
-
-                            // Moves to previous parentNode if collapsed
-                            if (hidden) {
-                                previous.focus();
-                            }
-
-                            // Select previous child from parentNode
-                            else {
-                                prevChild.focus();
-                            }
-                        }
-
-                        // Move within list
-                        else {
-                            previous.focus();
-                        }
-                    }
-
-                    // Move from top of list to parentNode
-                    else if (ancestor) {
-                        ancestor.focus();
-                    }
-
-                    event.preventDefault();
-                }
-
-                // Down arrow key moves down
-                else if (keyCode === 40) {
-                    var expanded = instance.get('expanded');
-
-                    if (expanded) {
-                        var node = targetNode.one('.tree-node');
-
-                        // Move from parentNode to first childNode
-                        if (node) {
-                            node.focus();
-                        }
-                    }
-
-                    // Move within list
-                    else if (nextNode) {
-                        nextNode.focus();
-                    }
-
-                    else if (ancestor) {
-                        var nextAncestor = ancestor.next();
-
-                        // Move from last childNode to next parentNode
-                        if (nextAncestor) {
-                            nextAncestor.focus();
-                        }
-                    }
-
-                    event.preventDefault();
-                }
-
-                // Left arrow key
-                else if (keyCode === 37) {
-
-                    // If on childNode returns to parentNode
-                    if (ancestor) {
-                        ancestor.focus();
-                    }
-
-                    // Toggles expand/collapse parentNode
-                    else {
-                        instance.collapse();
-                    }
-                }
-
-                // Right arrow key
-                else if (keyCode === 39) {
-
-                    // If on childNode returns to parentNode
-                    if (ancestor) {
-                        var nextAncestor = ancestor.next();
-
-                        // Move from last childNode to next parentNode
-                        if (nextAncestor) {
-                            nextAncestor.focus();
-                        }
-                    }
-                    // Toggles expand/collapse parentNode
-                    else {
-                        instance.expand();
-                    }
-                }
-            }
-        },
-
-        /**
          * Render the `contentBox` node.
          *
          * @method _renderContentBox
@@ -732,21 +599,6 @@ var TreeNode = A.Component.create({
             instance.set('container', nodeContainer);
 
             return nodeContainer;
-        },
-
-        /**
-         * Set the Aria Elements of the tree.
-         *
-         * @method _setAriaElements
-         * @protexted
-         */
-        _setAriaElements: function() {
-            var instance = this,
-                boundingBox = instance.get('boundingBox');
-
-            if (!instance.isLeaf() || instance.get('expanded')){
-                boundingBox.setAttribute('aria-expanded', instance.get('expanded'));
-            }
         },
 
         /**
@@ -1110,7 +962,6 @@ var TreeNode = A.Component.create({
             var instance = this;
 
             if (!instance.isLeaf()) {
-                var boundingBox = instance.get('boundingBox');
                 var container = instance.get('container');
                 var contentBox = instance.get('contentBox');
                 var ownerTree = instance.get('ownerTree');
@@ -1137,10 +988,6 @@ var TreeNode = A.Component.create({
                     if (container) {
                         container.hide();
                     }
-                }
-
-                if (boundingBox) {
-                    boundingBox.setAttribute('aria-expanded', val);
                 }
             }
         },

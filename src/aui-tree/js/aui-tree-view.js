@@ -259,6 +259,7 @@ var TreeView = A.Component.create({
             var instance = this;
             var contentBox = instance.get('contentBox');
             var children = instance.get('children');
+            var root = contentBox.hasClass('tree-root-container');
             var type = instance.get('type');
             var CSS_TREE_TYPE = getCN('tree', type);
 
@@ -267,6 +268,10 @@ var TreeView = A.Component.create({
             contentBox.addClass(
                 concat(CSS_TREE_TYPE, CSS_TREE_ROOT_CONTAINER)
             );
+
+            if (root) {
+                contentBox.setAttribute('tabIndex', 0);
+            }
 
             if (!children.length) {
                 // if children not specified try to create from markup
